@@ -62,4 +62,53 @@ public class LinkedinLoginTest {
         sleep(5000);
         Assert.assertEquals(webDriver.findElement(By.xpath("//ul[@role='navigation']")).isDisplayed(), true);
     }
+
+
+    @Test
+    public void loginNegativeTest() throws InterruptedException {
+
+        WebDriver webDriver = new FirefoxDriver();
+        webDriver.get("https://www.linkedin.com");
+
+        // без почты и пароля
+        webDriver.findElement(By.id("login-submit")).click();
+
+        Assert.assertEquals(webDriver.getCurrentUrl(),
+                "https://www.linkedin.com/",
+                "Logging was made with mistake!");
+
+        if (webDriver.getCurrentUrl() == "https://www.linkedin.com/feed/")
+            webDriver.navigate().back();
+
+        //с паролем без почты
+        WebElement passwordField = webDriver.findElement(By.id("login-password"));
+        passwordField.sendKeys("pswrd111");
+
+        webDriver.findElement(By.id("login-submit")).click();
+
+        Assert.assertEquals(webDriver.getCurrentUrl(),
+                "https://www.linkedin.com/",
+                "Logging was made with mistake!");
+
+
+        if (webDriver.getCurrentUrl() == "https://www.linkedin.com/feed/")
+            webDriver.navigate().back();
+
+        webDriver.navigate().refresh();
+        sleep(5000);
+
+        // с почтой без пароля
+        WebElement emailField = webDriver.findElement(By.id("login-email"));
+        emailField.sendKeys("a.motovilov@everad.com");
+
+        webDriver.findElement(By.id("login-submit")).click();
+
+        Assert.assertEquals(webDriver.getCurrentUrl(),
+                "https://www.linkedin.com/",
+                "Logging was made with mistake!");
+
+        if (webDriver.getCurrentUrl() == "https://www.linkedin.com/feed/")
+            webDriver.navigate().back();
+
+    }
 }
