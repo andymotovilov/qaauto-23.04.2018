@@ -4,7 +4,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
-import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -24,34 +23,26 @@ public class LinkedinLoginTest {
     @Test
     public void succesfulLoginTest() throws InterruptedException {
 
-      //  Assert.assertEquals("a","b", "Probably 'a' is not equal 'b' ");
 
-        Assert.assertEquals(webDriver.getTitle(),
+        LinkedinLoginPage linkedinLoginPage = new LinkedinLoginPage(webDriver);
+
+        Assert.assertEquals(linkedinLoginPage.getCurrentTitle(),
                         "LinkedIn: Войти или зарегистрироваться",
                         "Login page Title is wrong");
 
-        Assert.assertEquals(webDriver.getCurrentUrl(),
-                "https://www.linkedin.com/",
-                "URL is wrong");
+        Assert.assertTrue(linkedinLoginPage.isSignInButtonDisplayed(),
+                "Sign in button is not displayed!");
 
-        Assert.assertTrue(webDriver.findElement(By.xpath("//section[@class='form-body']")).isDisplayed());
-
-        LinkedinLoginPage linkedinLoginPage = new LinkedinLoginPage();
         linkedinLoginPage.login("a.motovilov@everad.com", "pswrd111");
 
-        Assert.assertTrue(signInButton.isDisplayed(),
-                "Sign In button is not displayed");
+        LinkedinHomePage linkedinHomePage = new LinkedinHomePage(webDriver);
 
-        Assert.assertEquals(webDriver.getTitle(),
-                "LinkedIn",
-                "Main page Title is wrong");
+        Assert.assertTrue(linkedinHomePage.getCurrentTitle().contains("LinkedIn"),
+                "Home page url is wrong.");
 
-        Assert.assertEquals(webDriver.getCurrentUrl(),
+        Assert.assertEquals(linkedinHomePage.getCurrentUrl(),
                 "https://www.linkedin.com/feed/",
                 "Main page URL is wrong");
-
-        sleep(5000);
-        Assert.assertEquals(webDriver.findElement(By.xpath("//ul[@role='navigation']")).isDisplayed(), true);
     }
 
 
@@ -96,13 +87,9 @@ public class LinkedinLoginTest {
 
     @Test
     public void loginNegativeTestWithTeacher() throws InterruptedException {
-        WebElement emailField = webDriver.findElement(By.id("login-email"));
-        WebElement passwordField = webDriver.findElement(By.id("login-password"));
-        WebElement signInButton = webDriver.findElement(By.id("login-submit"));
-
-        emailField.sendKeys("a.motovilov@everad.com");
-        passwordField.sendKeys("1");
-        signInButton.click();
+       LinkedinLoginPage linkedinLoginPage = new LinkedinLoginPage(webDriver);
+        Assert.assertTrue(linkedinLoginPage.isSignInButtonDisplayed(), "Sign in button is not displayed!");
+       linkedinLoginPage.login("a.motovilov@everad.com","1");
 
         sleep(5000);
 
