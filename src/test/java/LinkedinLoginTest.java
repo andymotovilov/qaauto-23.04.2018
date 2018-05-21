@@ -1,19 +1,14 @@
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static java.lang.Thread.sleep;
-
 public class LinkedinLoginTest {
 
     WebDriver webDriver;
 
-    //@BeforeClass - Один раз на класс (на все тесты в этом классе)
     @BeforeMethod
     public void before(){
         webDriver = new FirefoxDriver();
@@ -21,8 +16,7 @@ public class LinkedinLoginTest {
     }
 
     @Test
-    public void succesfulLoginTest() throws InterruptedException {
-
+    public void succesfulLoginTest() {
 
         LinkedinLoginPage linkedinLoginPage = new LinkedinLoginPage(webDriver);
 
@@ -45,65 +39,57 @@ public class LinkedinLoginTest {
                 "Main page URL is wrong");
     }
 
-
     @Test
-    public void loginNegativeTest() throws InterruptedException {
+    public void signInButtonTest() {
 
-        // без почты и пароля
-        webDriver.findElement(By.id("login-submit")).click();
+        LinkedinLoginPage linkedinLoginPage = new LinkedinLoginPage(webDriver);
 
-        Assert.assertEquals(webDriver.getCurrentUrl(),
-                "https://www.linkedin.com/",
-                "Logging was made with mistake!");
-
-
-        //с паролем без почты
-        WebElement passwordField = webDriver.findElement(By.id("login-password"));
-        passwordField.sendKeys("pswrd111");
-
-        webDriver.findElement(By.id("login-submit")).click();
-
-        Assert.assertEquals(webDriver.getCurrentUrl(),
-                "https://www.linkedin.com/",
-                "Logging was made with mistake!");
-
-
-        webDriver.navigate().refresh();
-        sleep(5000);
-
-        // с почтой без пароля
-        WebElement emailField = webDriver.findElement(By.id("login-email"));
-        emailField.sendKeys("a.motovilov@everad.com");
-
-        webDriver.findElement(By.id("login-submit")).click();
-
-        Assert.assertEquals(webDriver.getCurrentUrl(),
-                "https://www.linkedin.com/",
-                "Logging was made with mistake!");
-
+        Assert.assertTrue(linkedinLoginPage.isSignInButtonDisplayed(),
+                "Sign in button is not displayed!");
 
     }
 
+    @Test
+    public void loginNegativeWrongValuesTest() {
+
+        LinkedinLoginPage linkedinLoginPage = new LinkedinLoginPage(webDriver);
+
+        linkedinLoginPage.login("1","1");
+
+        LinkedinAuthorizationFailPage linkedinAuthorizationFailPage = new LinkedinAuthorizationFailPage(webDriver);
+
+        Assert.assertEquals(linkedinAuthorizationFailPage.getErrorText(),
+                "При заполнении формы были допущены ошибки. Проверьте и исправьте отмеченные поля.",
+                "Wrong error message text displayed.");
+
+    }
 
     @Test
-    public void loginNegativeTestWithTeacher() throws InterruptedException {
+    public void loginNegativeEmailTest() {
+
        LinkedinLoginPage linkedinLoginPage = new LinkedinLoginPage(webDriver);
-        Assert.assertTrue(linkedinLoginPage.isSignInButtonDisplayed(), "Sign in button is not displayed!");
-       linkedinLoginPage.login("a.motovilov@everad.com","1");
 
-        sleep(5000);
+       linkedinLoginPage.login("1","pswrd111");
 
-        String currentPageUrl = webDriver.getCurrentUrl();
-        String currentPageTitle = webDriver.getTitle();
+       LinkedinAuthorizationFailPage linkedinAuthorizationFailPage = new LinkedinAuthorizationFailPage(webDriver);
 
-        Assert.assertEquals(currentPageUrl, "https://www.linkedin.com/uas/login-submit",
-                "Login-Submit page url is wrong");
+       Assert.assertEquals(linkedinAuthorizationFailPage.getErrorText(),
+               "При заполнении формы были допущены ошибки. Проверьте и исправьте отмеченные поля.",
+                "Wrong error message text displayed.");
 
-        Assert.assertEquals(currentPageTitle, "Войти в LinkedIn", "Login-Submit page Title is wrong");
+    }
 
-        WebElement errorMessage = webDriver.findElement(By.xpath("//div[@role='alert']"));
+    @Test
+    public void loginNegativePasswordTest() {
 
-        Assert.assertEquals(errorMessage.getText(), "При заполнении формы были допущены ошибки. Проверьте и исправьте отмеченные поля.",
+        LinkedinLoginPage linkedinLoginPage = new LinkedinLoginPage(webDriver);
+
+        linkedinLoginPage.login("a.motovilov@everad.com","1");
+
+        LinkedinAuthorizationFailPage linkedinAuthorizationFailPage = new LinkedinAuthorizationFailPage(webDriver);
+
+        Assert.assertEquals(linkedinAuthorizationFailPage.getErrorText(),
+                "При заполнении формы были допущены ошибки. Проверьте и исправьте отмеченные поля.",
                 "Wrong error message text displayed.");
 
     }
