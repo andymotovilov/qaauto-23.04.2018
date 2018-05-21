@@ -2,14 +2,13 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-public class LinkedinAuthorizationFailPage {
+public class LinkedinAuthorizationFailPage extends LinkedinBasePage{
 
-    WebDriver webDriver;
     private WebElement errorMessage;
 
     public LinkedinAuthorizationFailPage(WebDriver webDriver){
 
-        this.webDriver = webDriver;
+        super(webDriver);
         initElements();
     }
 
@@ -21,11 +20,4 @@ public class LinkedinAuthorizationFailPage {
         return errorMessage.getText();
     }
 
-    public String getCurrentTitle() {
-        return webDriver.getTitle();
-    }
-
-    public String getCurrentUrl() {
-        return webDriver.getCurrentUrl();
-    }
 }

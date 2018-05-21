@@ -3,6 +3,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class LinkedinLoginTest {
@@ -15,8 +16,16 @@ public class LinkedinLoginTest {
         webDriver.get("https://www.linkedin.com");
     }
 
-    @Test
-    public void succesfulLoginTest() {
+    @DataProvider
+    public Object[][] validDataProvider() {
+        return new Object[][]{
+                { "a.motovilov@everad.com", "pswrd111" },
+                { "A.MOTOVILOV@EVERAD.COM", "pswrd111" }
+        };
+    }
+
+    @Test(dataProvider = "validDataProvider")
+    public void succesfulLoginTest(String email, String password) {
 
         LinkedinLoginPage linkedinLoginPage = new LinkedinLoginPage(webDriver);
 
@@ -27,7 +36,7 @@ public class LinkedinLoginTest {
         Assert.assertTrue(linkedinLoginPage.isSignInButtonDisplayed(),
                 "Sign in button is not displayed!");
 
-        linkedinLoginPage.login("a.motovilov@everad.com", "pswrd111");
+        linkedinLoginPage.login(email, password);
 
         LinkedinHomePage linkedinHomePage = new LinkedinHomePage(webDriver);
 
@@ -63,6 +72,7 @@ public class LinkedinLoginTest {
                 "Wrong error message text displayed.");
 
     }
+
 
     @Test
     public void loginNegativeEmailTest() {
@@ -103,6 +113,13 @@ public class LinkedinLoginTest {
         LinkedinForgotPasswordPage linkedinForgotPasswordPage = new LinkedinForgotPasswordPage(webDriver);
         Assert.assertEquals(linkedinForgotPasswordPage.getCurrentTitle(),
                 "Изменить пароль | LinkedIn", "It is not forgot password page!");
+
+    }
+
+
+    @Test
+    public void negativeReturnedToLoginSubmitTest(){
+
 
     }
 
