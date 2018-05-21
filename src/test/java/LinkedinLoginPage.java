@@ -11,6 +11,7 @@ public class LinkedinLoginPage {
     private WebElement emailField;
     private WebElement passwordField;
     private WebElement signInButton;
+    private WebElement forgotPassword;
 
     public LinkedinLoginPage(WebDriver webdriver){
         this.webDriver = webdriver;
@@ -21,6 +22,7 @@ public class LinkedinLoginPage {
         emailField = webDriver.findElement(By.id("login-email"));
         passwordField = webDriver.findElement(By.id("login-password"));
         signInButton = webDriver.findElement(By.id("login-submit"));
+        forgotPassword = webDriver.findElement(By.className("link-forgot-password"));
     }
 
     public void login(String email, String password){
@@ -40,5 +42,9 @@ public class LinkedinLoginPage {
 
     public String getCurrentTitle(){
         return webDriver.getTitle();
+    }
+
+    public void forgotPasswordClick(){
+        forgotPassword.click();
     }
 }

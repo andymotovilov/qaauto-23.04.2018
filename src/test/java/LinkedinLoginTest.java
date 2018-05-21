@@ -94,6 +94,18 @@ public class LinkedinLoginTest {
 
     }
 
+    @Test
+    public void forgotPasswordTest(){
+
+        LinkedinLoginPage linkedinLoginPage = new LinkedinLoginPage(webDriver);
+        linkedinLoginPage.forgotPasswordClick();
+
+        LinkedinForgotPasswordPage linkedinForgotPasswordPage = new LinkedinForgotPasswordPage(webDriver);
+        Assert.assertEquals(linkedinForgotPasswordPage.getCurrentTitle(),
+                "Изменить пароль | LinkedIn", "It is not forgot password page!");
+
+    }
+
     @AfterMethod
     public void after(){
 
