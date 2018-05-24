@@ -1,42 +1,53 @@
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 
 public class LinkedinLoginPage extends LinkedinBasePage{
 
+
+    @FindBy(id = "login-email")
     private WebElement emailField;
+
+    @FindBy(id = "login-password")
     private WebElement passwordField;
+
+    @FindBy(id = "login-submit")
     private WebElement signInButton;
+
+    @FindBy(id = "link-forgot-password")
     private WebElement forgotPassword;
+
+    @FindBy(id = "reg-firstname")
     private WebElement registrationFormName;
+
+    @FindBy(id = "reg-lastname")
     private WebElement registrationFormSurname;
+
+    @FindBy(id = "reg-email")
     private WebElement registrationFormEmail;
+
+    @FindBy(id = "reg-password")
     private WebElement registrationFormPassword;
+
+    @FindBy(id = "registration-submit")
     private WebElement registrationSubmitButton;
+
+    @FindBy(id = "alert-content")
     private WebElement failRegistrationMessage;
 
     public LinkedinLoginPage(WebDriver webDriver){
         super(webDriver);
-        initElements();
+        PageFactory.initElements(webDriver, this);
     }
 
-    public void initElements(){
-        emailField = webDriver.findElement(By.id("login-email"));
-        passwordField = webDriver.findElement(By.id("login-password"));
-        signInButton = webDriver.findElement(By.id("login-submit"));
-        forgotPassword = webDriver.findElement(By.className("link-forgot-password"));
-        registrationFormName = webDriver.findElement(By.id("reg-firstname"));
-        registrationFormSurname = webDriver.findElement(By.id("rreg-lastname"));
-        registrationFormEmail = webDriver.findElement(By.id("reg-email"));
-        registrationFormPassword = webDriver.findElement(By.id("reg-password"));
-        registrationSubmitButton = webDriver.findElement(By.id("registration-submit"));
-        failRegistrationMessage = webDriver.findElement(By.className("alert-content"));
-    }
 
-    public void login(String email, String password){
+    public LinkedinHomePage login(String email, String password){
         emailField.sendKeys(email);
         passwordField.sendKeys(password);
         signInButton.click();
+        return PageFactory.initElements(webDriver, LinkedinHomePage.class);
     }
 
     public void registration(String name, String surname, String email, String password){

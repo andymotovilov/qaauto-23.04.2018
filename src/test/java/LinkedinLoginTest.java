@@ -35,7 +35,7 @@ public class LinkedinLoginTest {
     @DataProvider
     public Object[][] wrongValuesRegistrationForm() {
         return new Object[][]{
-                { "andrey", "motovilov", "a.m@mail.com", "1" },
+                { "andrey", "motovilov", "1", "pswrddd" },
                 { "a", "b", "c", "d"  }
         };
     }
@@ -53,9 +53,9 @@ public class LinkedinLoginTest {
         Assert.assertTrue(linkedinLoginPage.isSignInButtonDisplayed(),
                 "Sign in button is not displayed!");
 
-        linkedinLoginPage.login(email, password);
+        LinkedinHomePage linkedinHomePage = linkedinLoginPage.login(email, password);
 
-        LinkedinHomePage linkedinHomePage = new LinkedinHomePage(webDriver);
+        //LinkedinHomePage linkedinHomePage = new LinkedinHomePage(webDriver);
 
         Assert.assertTrue(linkedinHomePage.getCurrentTitle().contains("LinkedIn"),
                 "Home page url is wrong.");
