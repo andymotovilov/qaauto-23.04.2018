@@ -17,14 +17,31 @@ public class LinkedinLoginTest {
     }
 
     @DataProvider
-    public Object[][] validDataProvider() {
+    public Object[][] rightValuesLoginPage() {
         return new Object[][]{
                 { "a.motovilov@everad.com", "pswrd111" },
                 { "A.MOTOVILOV@EVERAD.COM", "pswrd111" }
         };
     }
 
-    @Test(dataProvider = "validDataProvider")
+    @DataProvider
+    public Object[][] wrongValuesLoginPage() {
+        return new Object[][]{
+                { "1", "1" },
+                { "a", "a" }
+        };
+    }
+
+    @DataProvider
+    public Object[][] wrongValuesRegistrationForm() {
+        return new Object[][]{
+                { "andrey", "motovilov", "a.m@mail.com", "1" },
+                { "a", "b", "c", "d"  }
+        };
+    }
+
+
+    @Test(dataProvider = "rightValuesLoginPage")
     public void succesfulLoginTest(String email, String password) {
 
         LinkedinLoginPage linkedinLoginPage = new LinkedinLoginPage(webDriver);
@@ -48,6 +65,34 @@ public class LinkedinLoginTest {
                 "Main page URL is wrong");
     }
 
+    @Test(dataProvider = "wrongValuesLoginPage")
+    public void loginNegativeWrongValuesTest(String email, String password) {
+
+        LinkedinLoginPage linkedinLoginPage = new LinkedinLoginPage(webDriver);
+
+        linkedinLoginPage.login(email, password);
+
+        LinkedinAuthorizationFailPage linkedinAuthorizationFailPage = new LinkedinAuthorizationFailPage(webDriver);
+
+        Assert.assertEquals(linkedinAuthorizationFailPage.getErrorText(),
+                "При заполнении формы были допущены ошибки. Проверьте и исправьте отмеченные поля.",
+                "Wrong error message text displayed.");
+
+    }
+
+    @Test(dataProvider = "wrongValuesRegistrationForm")
+    public void registrationFormWrongValuesTest(String name, String surname, String email, String password){
+
+        LinkedinLoginPage linkedinLoginPage = new LinkedinLoginPage(webDriver);
+        linkedinLoginPage.registration(name, surname, email, password);
+
+        Assert.assertEquals(linkedinLoginPage.failRegistrMessage(),
+                "Укажите действительный адрес электронной почты",
+                "Wrong error message text displayed.");
+
+    }
+
+
     @Test
     public void signInButtonTest() {
 
@@ -55,21 +100,6 @@ public class LinkedinLoginTest {
 
         Assert.assertTrue(linkedinLoginPage.isSignInButtonDisplayed(),
                 "Sign in button is not displayed!");
-
-    }
-
-    @Test
-    public void loginNegativeWrongValuesTest() {
-
-        LinkedinLoginPage linkedinLoginPage = new LinkedinLoginPage(webDriver);
-
-        linkedinLoginPage.login("1","1");
-
-        LinkedinAuthorizationFailPage linkedinAuthorizationFailPage = new LinkedinAuthorizationFailPage(webDriver);
-
-        Assert.assertEquals(linkedinAuthorizationFailPage.getErrorText(),
-                "При заполнении формы были допущены ошибки. Проверьте и исправьте отмеченные поля.",
-                "Wrong error message text displayed.");
 
     }
 
@@ -117,11 +147,6 @@ public class LinkedinLoginTest {
     }
 
 
-    @Test
-    public void negativeReturnedToLoginSubmitTest(){
-
-
-    }
 
     @AfterMethod
     public void after(){
